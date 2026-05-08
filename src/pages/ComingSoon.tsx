@@ -1,5 +1,5 @@
-import { PageHeader, PageHeaderHeading } from '@/components/page-header'
-import { Card, CardContent } from '@/components/ui/card'
+import { PageHeader, PageHeaderHeading } from '@/shared/components/page-header'
+import { Card, CardContent } from '@/shared/components/ui/card'
 
 export default function ComingSoon() {
     return (

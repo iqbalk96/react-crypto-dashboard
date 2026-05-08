@@ -4,12 +4,12 @@ import {
 } from "lucide-react"
 import { mainMenu } from '@/config/menu'
 import { Link, NavLink } from 'react-router-dom'
-import { Button } from "@/components/ui/button"
+import { Button } from "@/shared/components/ui/button"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/shared/components/ui/popover"
 import {
     Sidebar,
     SidebarContent,
@@ -22,12 +22,12 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "@/shared/components/ui/sidebar"
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/shared/components/ui/collapsible"
 import { cn } from '@/lib/utils'
 
 export function AppSidebar() {
