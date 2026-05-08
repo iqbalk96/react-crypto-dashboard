@@ -39,7 +39,7 @@ const stats: StatsCard[] = [
 
 export default function DashboardStatsGrid() {
   return (
-    <section className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4 mt-3">
+    <section className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4 mt-5">
       {stats.map((item) => (
         <div
           key={item.title}
