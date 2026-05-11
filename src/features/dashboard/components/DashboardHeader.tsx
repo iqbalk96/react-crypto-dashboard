@@ -1,5 +1,3 @@
-import { CalendarDays } from "lucide-react";
-
 import {
   Card,
   CardContent,
@@ -8,23 +6,23 @@ import {
   CardDescription,
 } from "@/shared/components/ui/card";
 
-import { Button } from "@/shared/components/ui/button";
+import { TrendingUp, TrendingDown, Activity } from "lucide-react";
 
-type DashboardHeaderProps = {
-  title?: string;
-  subtitle?: string;
-};
-
-const timeRanges = ["1D", "7D", "30D", "90D", "1Y"];
+// =====================================================
+// Mock insight (nanti bisa dari /global CoinGecko)
+// =====================================================
+const marketTrend = "bullish"; // bullish | bearish
+const btcDominance = 52.4;
+const volatility = "moderate";
 
 export default function DashboardHeader({
-  title = "Dashboard",
-  subtitle = "Track crypto market trends and portfolio analytics in real time.",
-}: DashboardHeaderProps) {
+  title = "Crypto Market Overview",
+  subtitle = "Live market intelligence powered by global crypto data.",
+}) {
   return (
     <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
-      <CardHeader className="gap-6 lg:flex lg:items-center lg:justify-between">
-        {/* Left Content */}
+      <CardHeader className="space-y-6">
+        {/* Title */}
         <div className="space-y-2">
           <CardTitle className="text-3xl font-bold tracking-tight">
             {title}
@@ -35,41 +33,53 @@ export default function DashboardHeader({
           </CardDescription>
         </div>
 
-        {/* Right Controls */}
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Date Filter */}
-          <Button
-            variant="outline"
-            className="h-11 rounded-2xl border-border/50 bg-background/50 px-4 text-muted-foreground hover:bg-accent hover:text-foreground"
-          >
-            <CalendarDays className="size-4" />
-            <span>May 8, 2026</span>
-          </Button>
+        {/* Market Insight Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Trend */}
+          <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Market Trend
+              </p>
 
-          {/* Currency */}
-          <Button
-            variant="outline"
-            className="h-11 rounded-2xl border-border/50 bg-background/50 px-4 text-muted-foreground hover:bg-accent hover:text-foreground"
-          >
-            USD
-          </Button>
+              <p className="font-semibold capitalize">
+                {marketTrend}
+              </p>
+            </div>
 
-          {/* Time Range */}
-          <div className="flex items-center rounded-2xl border border-border/50 bg-background/50 p-1">
-            {timeRanges.map((range, index) => (
-              <Button
-                key={range}
-                variant={index === 0 ? "default" : "ghost"}
-                size="sm"
-                className={`rounded-xl px-4 ${
-                  index === 0
-                    ? "shadow-md"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {range}
-              </Button>
-            ))}
+            {marketTrend === "bullish" ? (
+              <TrendingUp className="text-emerald-400" />
+            ) : (
+              <TrendingDown className="text-red-400" />
+            )}
+          </div>
+
+          {/* BTC Dominance */}
+          <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                BTC Dominance
+              </p>
+
+              <p className="font-semibold">{btcDominance}%</p>
+            </div>
+
+            <span className="text-orange-400 font-bold">₿</span>
+          </div>
+
+          {/* Volatility */}
+          <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Volatility
+              </p>
+
+              <p className="font-semibold capitalize">
+                {volatility}
+              </p>
+            </div>
+
+            <Activity className="text-blue-400" />
           </div>
         </div>
       </CardHeader>
