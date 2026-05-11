@@ -1,73 +1,112 @@
-# React Shadcn Starter
+# 📊 Crypto Analytics
 
-React + Vite + TypeScript template for building apps with shadcn/ui.
+Crypto Analytics adalah dashboard analitik cryptocurrency berbasis React + Vite dengan arsitektur scalable dan modular. Project ini fokus pada performa, separation of concern, dan struktur feature-based untuk pengembangan jangka panjang.
 
-## Getting Started
+---
 
-```bash
-npx degit hayyi2/react-shadcn-starter my-project
-cd my-project
-npm install
-npm run dev
-```
+## 🚀 Tech Stack
 
-## Getting Done
+- React + Vite  
+- TypeScript  
+- React Router  
+- TanStack Query  
+- Shadcn UI  
+- Lucide Icons  
+- Tailwind CSS  
 
-- [x] Single page app with navigation and responsif layout
-- [x] Customable configuration `/config`
-- [x] Simple starting page/feature `/pages`
-- [x] Github action deploy github pages
+---
 
-## Deploy `gh-pages`
+## 🧠 Architecture Overview
 
-- change `basenameProd` in `/vite.config.ts`
-- create deploy key `GITHUB_TOKEN` in github `/settings/keys`
-- commit and push changes code
-- setup gihub pages to branch `gh-pages`
-- run action `Build & Deploy`
+Feature-based architecture dengan pemisahan:
 
-### Auto Deploy
+- Feature layer (domain logic)
+- Shared layer (reusable UI & utils)
+- Service layer (API handling)
+- Hook layer (data fetching abstraction)
 
-- change file `.github/workflows/build-and-deploy.yml`
-- Comment on `workflow_dispatch`
-- Uncomment on `push`
+---
 
-```yaml
-# on:
-#   workflow_dispatch:
-on:
-  push:
-    branches: ["main"]
-```
+## 📁 Project Structure
 
-## Features
+src/
+│
+├── app/
+│   └── providers/
+│
+├── config/
+├── contexts/
+│
+├── features/
+│   └── dashboard/
+│       ├── components/
+│       ├── hooks/
+│       ├── pages/
+│       ├── services/
+│       ├── store/
+│       └── types/
+│
+├── shared/
+│   ├── components/
+│   ├── constants/
+│   ├── hooks/
+│   ├── layouts/
+│   ├── services/
+│   │   ├── api.ts
+│   │   ├── http-client.ts
+│   │   └── interceptors.ts
+│   ├── types/
+│   └── utils/
+│
+└── styles/
 
-- React + Vite + TypeScript
-- Tailwind CSS
-- [shadcn-ui](https://github.com/shadcn-ui/ui/)
-- [react-router-dom](https://www.npmjs.com/package/react-router-dom)
+---
 
-## Project Structure
+## 🔌 Data Flow
 
-```md
-react-shadcn-starter/
-├── public/            # Public assets
-├── src/               # Application source code
-│   ├── components/    # React components
-│   ├── context/       # contexts components
-│   ├── config/        # Config data
-│   ├── hook/          # Custom hooks
-│   ├── lib/           # Utility functions
-│   ├── pages/         # pages/features components
-│   ├── App.tsx        # Application entry point
-│   ├── index.css      # Main css and tailwind configuration
-│   ├── main.tsx       # Main rendering file
-│   └── Router.tsx     # Routes component
-├── index.html         # HTML entry point
-├── tsconfig.json      # TypeScript configuration
-└── vite.config.ts     # Vite configuration
-```
+UI → Hook → TanStack Query → Service → HTTP Client → API → Cache → UI
 
-## License
+---
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/hayyi2/react-shadcn-starter/blob/main/LICENSE) file for details.
+## ⚙️ Key Principles
+
+- Separation of concerns
+- Service layer pattern
+- Feature isolation
+- Shared-first approach
+
+---
+
+## 📦 Example Feature
+
+features/dashboard/
+├── hooks/use-global-market.ts
+├── services/global-market.service.ts
+├── components/stats-card.tsx
+├── pages/dashboard-page.tsx
+
+---
+
+## 📊 Data Strategy
+
+- TanStack Query caching
+- No redundant API calls
+- Derived data separation
+
+---
+
+## 🎯 Goals
+
+- Scalable crypto analytics dashboard
+- Clean architecture
+- High performance UI
+- Maintainable codebase
+
+---
+
+## 🧩 Future Improvements
+
+- WebSocket real-time data
+- Candlestick chart module
+- Portfolio tracking
+- Advanced indicators
