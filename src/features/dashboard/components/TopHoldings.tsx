@@ -72,7 +72,7 @@ export function TopHoldings() {
           </CardTitle>
 
           <CardDescription className="mt-1 text-sm">
-            Your strongest crypto positions.
+            Top performing crypto allocations.
           </CardDescription>
         </div>
 

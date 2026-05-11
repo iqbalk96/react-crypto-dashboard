@@ -19,7 +19,7 @@ const timeRanges = ["1D", "7D", "30D", "90D", "1Y"];
 
 export default function DashboardHeader({
   title = "Dashboard",
-  subtitle = "Welcome back! Here's what's happening with your portfolio today.",
+  subtitle = "Track crypto market trends and portfolio analytics in real time.",
 }: DashboardHeaderProps) {
   return (
     <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">

@@ -14,7 +14,7 @@ const portfolioData = [
 
 export default function PortfolioPerformance() {
   return (
-    <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
+    <Card className="min-w-0 mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
       <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         {/* Header */}
         <div>
@@ -74,11 +74,6 @@ export default function PortfolioPerformance() {
                 </span>
               </div>
             </div>
-
-            {/* Analytics Button */}
-            <Button className="rounded-xl">
-              View Analytics
-            </Button>
           </div>
 
           {/* Fake Chart */}

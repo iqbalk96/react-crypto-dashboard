@@ -67,7 +67,7 @@ export function RecentActivity() {
           </CardTitle>
 
           <CardDescription className="mt-1 text-sm">
-            Latest transactions and portfolio updates.
+            Latest market and trading activities.
           </CardDescription>
         </div>
 
@@ -107,11 +107,10 @@ export function RecentActivity() {
                 </h4>
 
                 <p
-                  className={`mt-1 text-sm font-medium ${
-                    activity.positive
+                  className={`mt-1 text-sm font-medium ${activity.positive
                       ? "text-emerald-400"
                       : "text-red-400"
-                  }`}
+                    }`}
                 >
                   {activity.status}
                 </p>
