@@ -1,3 +1,13 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/ui/card";
+
+import { Button } from "@/shared/components/ui/button";
+
 // =====================================================
 // RecentActivity.tsx
 // =====================================================
@@ -13,98 +23,103 @@ type ActivityItem = {
 
 const activities: ActivityItem[] = [
   {
-    action: 'Bought Bitcoin',
-    asset: 'BTC',
-    amount: '$4,500.00',
-    time: '5 min ago',
-    status: 'Completed',
+    action: "Bought Bitcoin",
+    asset: "BTC",
+    amount: "$4,500.00",
+    time: "5 min ago",
+    status: "Completed",
     positive: true,
   },
   {
-    action: 'Sold Ethereum',
-    asset: 'ETH',
-    amount: '$2,120.50',
-    time: '18 min ago',
-    status: 'Completed',
+    action: "Sold Ethereum",
+    asset: "ETH",
+    amount: "$2,120.50",
+    time: "18 min ago",
+    status: "Completed",
     positive: false,
   },
   {
-    action: 'Staked Solana',
-    asset: 'SOL',
-    amount: '$1,450.00',
-    time: '1 hour ago',
-    status: 'Active',
+    action: "Staked Solana",
+    asset: "SOL",
+    amount: "$1,450.00",
+    time: "1 hour ago",
+    status: "Active",
     positive: true,
   },
   {
-    action: 'Swapped BNB',
-    asset: 'BNB',
-    amount: '$820.30',
-    time: '3 hours ago',
-    status: 'Pending',
+    action: "Swapped BNB",
+    asset: "BNB",
+    amount: "$820.30",
+    time: "3 hours ago",
+    status: "Pending",
     positive: true,
   },
 ];
 
 export function RecentActivity() {
   return (
-    <section className="rounded-lg border border-white/10 bg-[#0B1020]/80 p-6 backdrop-blur-xl mt-5">
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+    <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
+        {/* Header */}
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white">
+          <CardTitle className="text-2xl font-bold tracking-tight">
             Recent Activity
-          </h2>
+          </CardTitle>
 
-          <p className="mt-1 text-sm text-slate-400">
+          <CardDescription className="mt-1 text-sm">
             Latest transactions and portfolio updates.
-          </p>
+          </CardDescription>
         </div>
 
-        <button className="rounded-xl border border-violet-500/20 bg-violet-500/10 px-4 py-2 text-sm font-medium text-violet-300 transition hover:bg-violet-500/20 hover:text-white">
+        <Button
+          variant="outline"
+          className="rounded-xl border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
+        >
           View All
-        </button>
-      </div>
+        </Button>
+      </CardHeader>
 
-      {/* Activity List */}
-      <div className="space-y-4">
-        {activities.map((activity, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between rounded-2xl border border-transparent bg-white/[0.03] p-4 transition hover:border-violet-500/20 hover:bg-violet-500/[0.03]"
-          >
-            {/* Left */}
-            <div>
-              <h3 className="font-medium text-white">
-                {activity.action}
-              </h3>
+      <CardContent>
+        {/* Activity List */}
+        <div className="space-y-4">
+          {activities.map((activity, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between rounded-2xl border border-transparent bg-muted/20 p-4 transition hover:border-primary/20 hover:bg-primary/[0.03]"
+            >
+              {/* Left */}
+              <div>
+                <h3 className="font-medium">
+                  {activity.action}
+                </h3>
 
-              <div className="mt-1 flex items-center gap-2 text-sm text-slate-400">
-                <span>{activity.asset}</span>
-                <span>•</span>
-                <span>{activity.time}</span>
+                <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>{activity.asset}</span>
+                  <span>•</span>
+                  <span>{activity.time}</span>
+                </div>
+              </div>
+
+              {/* Right */}
+              <div className="text-right">
+                <h4 className="font-semibold">
+                  {activity.amount}
+                </h4>
+
+                <p
+                  className={`mt-1 text-sm font-medium ${
+                    activity.positive
+                      ? "text-emerald-400"
+                      : "text-red-400"
+                  }`}
+                >
+                  {activity.status}
+                </p>
               </div>
             </div>
-
-            {/* Right */}
-            <div className="text-right">
-              <h4 className="font-semibold text-white">
-                {activity.amount}
-              </h4>
-
-              <p
-                className={`mt-1 text-sm font-medium ${
-                  activity.positive
-                    ? 'text-emerald-400'
-                    : 'text-red-400'
-                }`}
-              >
-                {activity.status}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

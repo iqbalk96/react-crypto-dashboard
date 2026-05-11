@@ -1,56 +1,80 @@
+import { CalendarDays } from "lucide-react";
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/shared/components/ui/card";
+
+import { Button } from "@/shared/components/ui/button";
+
 type DashboardHeaderProps = {
   title?: string;
   subtitle?: string;
 };
 
+const timeRanges = ["1D", "7D", "30D", "90D", "1Y"];
+
 export default function DashboardHeader({
-  title = 'Dashboard',
+  title = "Dashboard",
   subtitle = "Welcome back! Here's what's happening with your portfolio today.",
 }: DashboardHeaderProps) {
   return (
-    <section className="flex flex-col gap-6 rounded-lg border border-white/10 bg-[#0B1020]/80 p-6 backdrop-blur-xl mt-5">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+    <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
+      <CardHeader className="gap-6 lg:flex lg:items-center lg:justify-between">
         {/* Left Content */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">
+        <div className="space-y-2">
+          <CardTitle className="text-3xl font-bold tracking-tight">
             {title}
-          </h1>
+          </CardTitle>
 
-          <p className="mt-2 text-sm text-slate-400">
+          <CardDescription className="max-w-2xl text-sm">
             {subtitle}
-          </p>
+          </CardDescription>
         </div>
 
         {/* Right Controls */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Date Filter */}
-          <button className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300 transition hover:border-violet-500/40 hover:bg-violet-500/10 hover:text-white">
-            <span>📅</span>
+          <Button
+            variant="outline"
+            className="h-11 rounded-2xl border-border/50 bg-background/50 px-4 text-muted-foreground hover:bg-accent hover:text-foreground"
+          >
+            <CalendarDays className="size-4" />
             <span>May 8, 2026</span>
-          </button>
+          </Button>
 
           {/* Currency */}
-          <button className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300 transition hover:border-violet-500/40 hover:bg-violet-500/10 hover:text-white">
+          <Button
+            variant="outline"
+            className="h-11 rounded-2xl border-border/50 bg-background/50 px-4 text-muted-foreground hover:bg-accent hover:text-foreground"
+          >
             USD
-          </button>
+          </Button>
 
           {/* Time Range */}
-          <div className="flex items-center rounded-2xl border border-white/10 bg-white/5 p-1">
-            {['1D', '7D', '30D', '90D', '1Y'].map((range, index) => (
-              <button
+          <div className="flex items-center rounded-2xl border border-border/50 bg-background/50 p-1">
+            {timeRanges.map((range, index) => (
+              <Button
                 key={range}
-                className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                variant={index === 0 ? "default" : "ghost"}
+                size="sm"
+                className={`rounded-xl px-4 ${
                   index === 0
-                    ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/30'
-                    : 'text-slate-400 hover:text-white'
+                    ? "shadow-md"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {range}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </CardHeader>
+
+      <CardContent />
+    </Card>
   );
 }
