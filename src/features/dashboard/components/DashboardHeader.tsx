@@ -13,7 +13,7 @@ import {
   Coins,
 } from "lucide-react";
 
-import { useMarketInsight } from "../hooks/use-market-insight";
+import { useMarketInsight } from "../derived/use-market-insight";
 
 // =====================================================
 // Loading Skeleton
@@ -38,11 +38,20 @@ export default function DashboardHeader({
   title = "Crypto Market Overview",
   subtitle = "Live market intelligence powered by global crypto data.",
 }) {
-  const { data, isLoading } = useMarketInsight();
+  const {
+    trend,
+    btcDominance,
+    volatility,
+    totalMarketCap,
+    activeCoins,
+    isLoading,
+  } = useMarketInsight();
 
+  
   return (
     <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
       <CardHeader className="space-y-6">
+
         {/* Title */}
         <div className="space-y-2">
           <CardTitle className="text-3xl font-bold tracking-tight">
@@ -55,25 +64,25 @@ export default function DashboardHeader({
         </div>
 
         {/* Loading */}
-        {isLoading || !data ? (
+        {isLoading ? (
           <HeaderSkeleton />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
             {/* Market Trend */}
             <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
               <div>
                 <p className="text-sm text-muted-foreground">
                   Market Trend
                 </p>
-
                 <p className="font-semibold capitalize">
-                  {data.trend}
+                  {trend}
                 </p>
               </div>
 
-              {data.trend === "bullish" ? (
+              {trend === "bullish" ? (
                 <TrendingUp className="text-emerald-400" />
-              ) : data.trend === "bearish" ? (
+              ) : trend === "bearish" ? (
                 <TrendingDown className="text-red-400" />
               ) : (
                 <Activity className="text-muted-foreground" />
@@ -86,9 +95,8 @@ export default function DashboardHeader({
                 <p className="text-sm text-muted-foreground">
                   BTC Dominance
                 </p>
-
                 <p className="font-semibold">
-                  {data.btcDominance}%
+                  {btcDominance}%
                 </p>
               </div>
 
@@ -101,45 +109,43 @@ export default function DashboardHeader({
                 <p className="text-sm text-muted-foreground">
                   Volatility
                 </p>
-
                 <p className="font-semibold capitalize">
-                  {data.volatility}
+                  {volatility}
                 </p>
               </div>
 
               <Activity
                 className={
-                  data.volatility === "high"
+                  volatility === "high"
                     ? "text-red-400"
-                    : data.volatility === "low"
+                    : volatility === "low"
                     ? "text-emerald-400"
                     : "text-blue-400"
                 }
               />
             </div>
+
           </div>
         )}
 
         {/* Secondary stats */}
-        {!isLoading && data && (
+        {!isLoading && (
           <div className="flex flex-wrap gap-6 pt-2 text-sm text-muted-foreground">
+
             <span>
               Active Coins:{" "}
               <b className="text-foreground">
-                {data.activeCoins.toLocaleString()}
+                {activeCoins?.toLocaleString()}
               </b>
             </span>
 
             <span>
               Market Cap:{" "}
               <b className="text-foreground">
-                $
-                {(
-                  data.totalMarketCap / 1e12
-                ).toFixed(2)}{" "}
-                T
+                ${(totalMarketCap / 1e12).toFixed(2)} T
               </b>
             </span>
+
           </div>
         )}
       </CardHeader>

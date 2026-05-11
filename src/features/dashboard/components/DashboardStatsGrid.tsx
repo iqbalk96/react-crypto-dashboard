@@ -3,7 +3,7 @@ import {
   CardContent,
 } from "@/shared/components/ui/card";
 
-import { useGlobalMarket } from "../hooks/use-global-market";
+import { useGlobalMarket } from "../derived/use-global-market";
 
 export default function DashboardStatsGrid() {
   const { stats, isLoading, isFetching } = useGlobalMarket();

@@ -15,7 +15,7 @@ import {
 } from "recharts";
 
 import { Button } from "@/shared/components/ui/button";
-import { useMarketExposure } from "../hooks/use-market-exposure";
+import { useMarketExposure } from "../derived/use-market-exposure";
 
 // =====================================================
 // COLORS (static UI mapping)
@@ -35,7 +35,7 @@ function ChartSkeleton() {
 // Component
 // =====================================================
 export function MarketExposure() {
-  const { data, isLoading, refetch } = useMarketExposure();
+  const { data, isLoading } = useMarketExposure();
 
   // fallback safety
   const chartData =
@@ -64,7 +64,6 @@ export function MarketExposure() {
         </div>
 
         <Button
-          onClick={() => refetch()}
           variant="outline"
           className="rounded-xl border-primary/20 bg-primary/10 text-primary"
         >
