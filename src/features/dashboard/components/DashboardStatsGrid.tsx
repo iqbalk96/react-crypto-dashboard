@@ -1,11 +1,4 @@
 import {
-  Coins,
-  Globe,
-  LineChart,
-  TrendingUp,
-} from "lucide-react";
-
-import {
   Card,
   CardContent,
 } from "@/shared/components/ui/card";
