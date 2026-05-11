@@ -25,10 +25,7 @@ Feature-based architecture dengan pemisahan:
 - Service layer (API handling)
 - Hook layer (data fetching abstraction)
 
----
-
-## 📁 Project Structure
-
+```txt
 src/
 │
 ├── app/
@@ -59,8 +56,7 @@ src/
 │   └── utils/
 │
 └── styles/
-
----
+```
 
 ## 🔌 Data Flow
 
