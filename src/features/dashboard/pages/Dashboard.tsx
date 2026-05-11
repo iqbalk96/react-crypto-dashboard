@@ -6,7 +6,7 @@ import DashboardStatsGrid from "../components/DashboardStatsGrid";
 import MarketOverview from "../components/MarketOverview";
 import PortfolioPerformance from "../components/PortfolioPerformance";
 
-import { TopHoldings } from "../components/TopHoldings";
+import { MarketExposure } from "../components/TopHoldings";
 import { RecentActivity } from "../components/RecentActivity";
 
 import FooterBanner from "../components/FooterBanner";
@@ -26,7 +26,7 @@ export default function Dashboard() {
             {/* Holdings + Activity */}
             <div className="mt-5 grid gap-5 xl:grid-cols-[2fr_1fr]">
                 <div className="min-w-0">
-                    <TopHoldings />
+                    <MarketExposure />
                 </div>
 
                 <div className="min-w-0">

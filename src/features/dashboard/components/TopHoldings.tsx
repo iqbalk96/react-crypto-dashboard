@@ -6,131 +6,154 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
+
 import { Button } from "@/shared/components/ui/button";
+import { useMarketExposure } from "../hooks/use-market-exposure";
 
 // =====================================================
-// TopHoldings.tsx
+// COLORS (static UI mapping)
 // =====================================================
+const COLORS = ["#f7931a", "#627eea", "#94a3b8"];
 
-type HoldingAsset = {
-  name: string;
-  symbol: string;
-  amount: string;
-  allocation: string;
-  profit: string;
-  positive: boolean;
-  icon: string;
-};
+// =====================================================
+// Shimmer fallback (simple UX state)
+// =====================================================
+function ChartSkeleton() {
+  return (
+    <div className="h-[260px] w-full animate-pulse rounded-xl bg-muted/20" />
+  );
+}
 
-const holdings: HoldingAsset[] = [
-  {
-    name: "Bitcoin",
-    symbol: "BTC",
-    amount: "$42,540.12",
-    allocation: "45%",
-    profit: "+8.25%",
-    positive: true,
-    icon: "🟠",
-  },
-  {
-    name: "Ethereum",
-    symbol: "ETH",
-    amount: "$28,230.88",
-    allocation: "28%",
-    profit: "+5.14%",
-    positive: true,
-    icon: "⚪",
-  },
-  {
-    name: "Solana",
-    symbol: "SOL",
-    amount: "$12,120.45",
-    allocation: "14%",
-    profit: "-2.45%",
-    positive: false,
-    icon: "🟣",
-  },
-  {
-    name: "BNB",
-    symbol: "BNB",
-    amount: "$8,942.00",
-    allocation: "13%",
-    profit: "+1.92%",
-    positive: true,
-    icon: "🟡",
-  },
-];
+// =====================================================
+// Component
+// =====================================================
+export function MarketExposure() {
+  const { data, isLoading, refetch } = useMarketExposure();
 
-export function TopHoldings() {
+  // fallback safety
+  const chartData =
+    data?.items?.map((item) => ({
+      name: item.name,
+      value: item.value,
+      color: item.color,
+    })) ?? [];
+
+  const total = chartData.reduce(
+    (acc, item) => acc + item.value,
+    0
+  );
+
   return (
     <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        {/* Header */}
         <div>
           <CardTitle className="text-2xl font-bold tracking-tight">
-            Top Holdings
+            Market Exposure
           </CardTitle>
 
           <CardDescription className="mt-1 text-sm">
-            Top performing crypto allocations.
+            Market dominance and structure across major crypto assets.
           </CardDescription>
         </div>
 
         <Button
+          onClick={() => refetch()}
           variant="outline"
-          className="rounded-xl border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
+          className="rounded-xl border-primary/20 bg-primary/10 text-primary"
         >
-          Manage
+          Refresh
         </Button>
       </CardHeader>
 
       <CardContent>
-        {/* Asset List */}
-        <div className="space-y-4">
-          {holdings.map((asset) => (
-            <div
-              key={asset.symbol}
-              className="flex items-center justify-between rounded-2xl border border-transparent bg-muted/20 p-4 transition hover:border-primary/20 hover:bg-primary/[0.03]"
-            >
-              {/* Left */}
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-background/50 text-2xl shadow-lg shadow-black/20">
-                  {asset.icon}
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          {/* Donut Chart */}
+          {isLoading ? (
+            <ChartSkeleton />
+          ) : (
+            <div className="h-[260px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={70}
+                    outerRadius={100}
+                    paddingAngle={3}
+                    dataKey="value"
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell
+                        key={entry.name}
+                        fill={COLORS[index] ?? "#94a3b8"}
+                      />
+                    ))}
+                  </Pie>
 
-                <div>
-                  <h3 className="font-semibold">
-                    {asset.name}
-                  </h3>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#0f172a",
+                      border: "none",
+                      borderRadius: "12px",
+                      color: "#fff",
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
 
-                  <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>{asset.symbol}</span>
-                    <span>•</span>
-                    <span>
-                      {asset.allocation} Allocation
+          {/* Stats */}
+          <div className="space-y-4">
+            {isLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-14 animate-pulse rounded-xl bg-muted/20"
+                  />
+                ))
+              : chartData.map((item, index) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between rounded-xl border bg-muted/20 p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="h-3 w-3 rounded-full"
+                        style={{
+                          backgroundColor:
+                            COLORS[index] ?? "#94a3b8",
+                        }}
+                      />
+                      <span className="font-medium">
+                        {item.name}
+                      </span>
+                    </div>
+
+                    <span className="text-sm text-muted-foreground">
+                      {item.value.toFixed(2)}%
                     </span>
                   </div>
-                </div>
-              </div>
+                ))}
 
-              {/* Right */}
-              <div className="text-right">
-                <h4 className="font-semibold">
-                  {asset.amount}
-                </h4>
-
-                <p
-                  className={`mt-1 text-sm font-medium ${
-                    asset.positive
-                      ? "text-emerald-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {asset.profit}
-                </p>
+            {/* Total */}
+            {!isLoading && (
+              <div className="pt-4 border-t text-sm text-muted-foreground">
+                Total Market Representation:{" "}
+                <span className="font-semibold text-foreground">
+                  {total.toFixed(2)}%
+                </span>
               </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
