@@ -31,7 +31,7 @@ const COINS = [
 ] as const;
 
 export default function MarketPerformance() {
-  const [range, setRange] = useState<MarketRange>("7D");
+  const [range, setRange] = useState<MarketRange>("1Y");
   const [coin, setCoin] = useState<CoinId>("bitcoin");
 
   const { data, isLoading, isError } = useMarketPerformance(range, coin);

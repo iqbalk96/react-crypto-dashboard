@@ -7,6 +7,6 @@ export function useMarketOverview() {
     queryKey: ["market-overview"],
     queryFn: getMarketOverview,
     staleTime: 1000 * 60,
-    refetchInterval: 1000 * 60,
+    refetchInterval: 5000 * 60,
   });
 }
