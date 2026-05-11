@@ -6,19 +6,40 @@ import {
   CardDescription,
 } from "@/shared/components/ui/card";
 
-import { TrendingUp, TrendingDown, Activity } from "lucide-react";
+import {
+  TrendingUp,
+  TrendingDown,
+  Activity,
+  Coins,
+} from "lucide-react";
+
+import { useMarketInsight } from "../hooks/use-market-insight";
 
 // =====================================================
-// Mock insight (nanti bisa dari /global CoinGecko)
+// Loading Skeleton
 // =====================================================
-const marketTrend = "bullish"; // bullish | bearish
-const btcDominance = 52.4;
-const volatility = "moderate";
+function HeaderSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div
+          key={i}
+          className="h-20 animate-pulse rounded-2xl bg-muted/20"
+        />
+      ))}
+    </div>
+  );
+}
 
+// =====================================================
+// Component
+// =====================================================
 export default function DashboardHeader({
   title = "Crypto Market Overview",
   subtitle = "Live market intelligence powered by global crypto data.",
 }) {
+  const { data, isLoading } = useMarketInsight();
+
   return (
     <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
       <CardHeader className="space-y-6">
@@ -33,55 +54,94 @@ export default function DashboardHeader({
           </CardDescription>
         </div>
 
-        {/* Market Insight Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Trend */}
-          <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Market Trend
-              </p>
+        {/* Loading */}
+        {isLoading || !data ? (
+          <HeaderSkeleton />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Market Trend */}
+            <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  Market Trend
+                </p>
 
-              <p className="font-semibold capitalize">
-                {marketTrend}
-              </p>
+                <p className="font-semibold capitalize">
+                  {data.trend}
+                </p>
+              </div>
+
+              {data.trend === "bullish" ? (
+                <TrendingUp className="text-emerald-400" />
+              ) : data.trend === "bearish" ? (
+                <TrendingDown className="text-red-400" />
+              ) : (
+                <Activity className="text-muted-foreground" />
+              )}
             </div>
 
-            {marketTrend === "bullish" ? (
-              <TrendingUp className="text-emerald-400" />
-            ) : (
-              <TrendingDown className="text-red-400" />
-            )}
-          </div>
+            {/* BTC Dominance */}
+            <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  BTC Dominance
+                </p>
 
-          {/* BTC Dominance */}
-          <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                BTC Dominance
-              </p>
+                <p className="font-semibold">
+                  {data.btcDominance}%
+                </p>
+              </div>
 
-              <p className="font-semibold">{btcDominance}%</p>
+              <Coins className="text-orange-400" />
             </div>
 
-            <span className="text-orange-400 font-bold">₿</span>
-          </div>
+            {/* Volatility */}
+            <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  Volatility
+                </p>
 
-          {/* Volatility */}
-          <div className="flex items-center justify-between rounded-2xl border bg-muted/20 p-4">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Volatility
-              </p>
+                <p className="font-semibold capitalize">
+                  {data.volatility}
+                </p>
+              </div>
 
-              <p className="font-semibold capitalize">
-                {volatility}
-              </p>
+              <Activity
+                className={
+                  data.volatility === "high"
+                    ? "text-red-400"
+                    : data.volatility === "low"
+                    ? "text-emerald-400"
+                    : "text-blue-400"
+                }
+              />
             </div>
-
-            <Activity className="text-blue-400" />
           </div>
-        </div>
+        )}
+
+        {/* Secondary stats */}
+        {!isLoading && data && (
+          <div className="flex flex-wrap gap-6 pt-2 text-sm text-muted-foreground">
+            <span>
+              Active Coins:{" "}
+              <b className="text-foreground">
+                {data.activeCoins.toLocaleString()}
+              </b>
+            </span>
+
+            <span>
+              Market Cap:{" "}
+              <b className="text-foreground">
+                $
+                {(
+                  data.totalMarketCap / 1e12
+                ).toFixed(2)}{" "}
+                T
+              </b>
+            </span>
+          </div>
+        )}
       </CardHeader>
 
       <CardContent />
