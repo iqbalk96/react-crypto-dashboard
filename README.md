@@ -2,6 +2,10 @@
 
 Crypto Analytics adalah dashboard analitik cryptocurrency berbasis React + Vite dengan arsitektur scalable dan modular. Project ini fokus pada performa, separation of concern, dan struktur feature-based untuk pengembangan jangka panjang.
 
+## 📸 Screenshot
+
+![Crypto Analytics Dashboard](docs/screen-capture.png)
+
 ---
 
 ## 🚀 Tech Stack
