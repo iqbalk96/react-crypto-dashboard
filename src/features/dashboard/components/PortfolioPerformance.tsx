@@ -55,17 +55,16 @@ export default function MarketPerformance() {
           {/* COIN SELECTOR */}
           <div className="flex items-center gap-2 rounded-xl bg-muted/40 p-1">
             {COINS.map((c) => (
-              <button
+              <Button
                 key={c.value}
                 onClick={() => setCoin(c.value)}
-                className={`rounded-lg px-3 py-1 text-sm transition ${
-                  coin === c.value
-                    ? "bg-primary text-white"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`rounded-lg px-3 py-1 text-sm transition ${coin === c.value
+                    ? "rounded-xl"
+                    : "rounded-xl bg-muted/40 text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {c.label}
-              </button>
+              </Button>
             ))}
           </div>
 
@@ -107,11 +106,10 @@ export default function MarketPerformance() {
 
               <div className="mt-4 flex items-center gap-2">
                 <span
-                  className={`rounded-full px-3 py-1 text-sm font-medium ${
-                    (data?.changePercent ?? 0) >= 0
+                  className={`rounded-full px-3 py-1 text-sm font-medium ${(data?.changePercent ?? 0) >= 0
                       ? "bg-emerald-500/15 text-emerald-400"
                       : "bg-red-500/15 text-red-400"
-                  }`}
+                    }`}
                 >
                   {data?.changePercent && data.changePercent > 0 ? "+" : ""}
                   {data?.changePercent?.toFixed(2) ?? 0}%
