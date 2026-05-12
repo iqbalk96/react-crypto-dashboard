@@ -1,6 +1,5 @@
 import {
-    CircleAlert,
-    Files,
+    ChartGantt,
     Gauge,
     LucideIcon
 } from 'lucide-react'
@@ -21,23 +20,8 @@ export const mainMenu: MenuType = [
         icon: Gauge
     },
     {
-        title: 'Pages',
-        url: '/pages',
-        icon: Files,
-        items: [
-            {
-                title: 'Sample Page',
-                url: '/pages/sample',
-            },
-            {
-                title: 'Coming Soon',
-                url: '/pages/feature',
-            },
-        ]
-    },
-    {
-        title: 'Error',
-        url: '/404',
-        icon: CircleAlert,
+        title: 'Dca Simulation',
+        url: '/dca-simulation',
+        icon: ChartGantt,
     },
 ]
