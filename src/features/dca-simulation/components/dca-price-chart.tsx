@@ -59,7 +59,7 @@ const chartData = [
 
 export function DCAPriceChart() {
   return (
-    <Card className="border-border/50 bg-card/50 backdrop-blur-sm mt-5">
+    <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader className="space-y-1">
         <CardTitle>
           BTC Price with DCA Purchases

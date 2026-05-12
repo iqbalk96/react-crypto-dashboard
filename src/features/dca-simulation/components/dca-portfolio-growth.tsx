@@ -59,7 +59,7 @@ const chartData = [
 
 export function DCAPortfolioGrowthChart() {
   return (
-    <Card className="border-border/50 bg-card/50 backdrop-blur-sm mt-5">
+    <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader className="space-y-1">
         <CardTitle>
           Portfolio Growth
