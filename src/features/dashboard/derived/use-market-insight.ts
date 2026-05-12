@@ -3,8 +3,6 @@ import { useGlobalMarketBase } from "../hooks/use-global-market-base";
 export function useMarketInsight() {
   const { data, isLoading } = useGlobalMarketBase();
 
-  console.log(data?.total_market_cap);
-
   const change = data?.market_cap_change_percentage_24h_usd ?? 0;
 
   return {
