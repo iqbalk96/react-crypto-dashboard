@@ -8,6 +8,23 @@ import {
 
 import { Button } from "@/shared/components/ui/button";
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/components/ui/table";
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/shared/components/ui/avatar";
+
+import { Badge } from "@/shared/components/ui/badge";
+
 import { useMarketOverview } from "../hooks/use-market-overview";
 
 import {
@@ -16,18 +33,20 @@ import {
 } from "@/shared/utils";
 
 export default function MarketOverview() {
-  const { data, isLoading } = useMarketOverview();
+  const { data, isLoading } =
+    useMarketOverview();
 
   return (
     <Card className="mt-5 border-border/50 bg-background/80 backdrop-blur-xl">
-      <CardHeader className="flex flex-row items-start justify-between space-y-0">
+      <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <CardTitle className="text-2xl font-bold tracking-tight">
             Market Overview
           </CardTitle>
 
           <CardDescription className="mt-1 text-sm">
-            Top crypto assets market performance.
+            Top crypto assets market
+            performance.
           </CardDescription>
         </div>
 
@@ -40,111 +59,142 @@ export default function MarketOverview() {
       </CardHeader>
 
       <CardContent>
-        <div className="hidden grid-cols-5 border-b border-border/50 pb-4 text-sm text-muted-foreground md:grid">
-          <span>Asset</span>
-          <span>Price</span>
-          <span>24h %</span>
-          <span>Market Cap</span>
-          <span className="text-right">Chart</span>
-        </div>
+        {isLoading && (
+          <div className="py-10 text-center text-muted-foreground">
+            Loading market data...
+          </div>
+        )}
 
-        <div className="mt-2 space-y-3">
-          {isLoading && (
-            <div className="py-10 text-center text-muted-foreground">
-              Loading market data...
-            </div>
-          )}
+        {!isLoading && (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-border/50 hover:bg-transparent">
+                  <TableHead>
+                    Asset
+                  </TableHead>
 
-          {data?.map((asset) => {
-            const positive =
-              asset.price_change_percentage_24h >= 0;
-
-            return (
-              <div
-                key={asset.id}
-                className="grid grid-cols-1 gap-4 rounded-2xl border border-transparent bg-muted/20 p-4 transition hover:border-primary/20 hover:bg-primary/[0.03] md:grid-cols-5 md:items-center"
-              >
-                {/* Asset */}
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-background/50 p-2 shadow-lg shadow-black/20">
-                    <img
-                      src={asset.image}
-                      alt={asset.name}
-                      className="h-8 w-8"
-                    />
-                  </div>
-
-                  <div>
-                    <h3 className="font-medium">
-                      {asset.name}
-                    </h3>
-
-                    <p className="text-sm uppercase text-muted-foreground">
-                      {asset.symbol}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Price */}
-                <div>
-                  <p className="text-sm text-muted-foreground md:hidden">
+                  <TableHead>
                     Price
-                  </p>
+                  </TableHead>
 
-                  <span className="font-medium">
-                    {formatCurrency(asset.current_price)}
-                  </span>
-                </div>
+                  <TableHead>
+                    24h %
+                  </TableHead>
 
-                {/* Change */}
-                <div>
-                  <p className="text-sm text-muted-foreground md:hidden">
-                    24h
-                  </p>
-
-                  <span
-                    className={`font-medium ${positive
-                        ? "text-emerald-400"
-                        : "text-red-400"
-                      }`}
-                  >
-                    {positive ? "+" : ""}
-                    {asset.price_change_percentage_24h.toFixed(2)}%
-                  </span>
-                </div>
-
-                {/* Market Cap */}
-                <div>
-                  <p className="text-sm text-muted-foreground md:hidden">
+                  <TableHead>
                     Market Cap
-                  </p>
+                  </TableHead>
 
-                  <span className="font-medium">
-                    {formatMarketCap(asset.market_cap)}
-                  </span>
-                </div>
+                  <TableHead className="text-right">
+                    Trend
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
 
-                {/* Fake Chart */}
-                <div className="flex items-center justify-start md:justify-end">
-                  <div className="flex items-end gap-1">
-                    {[18, 24, 16, 30, 22, 34, 26, 40].map(
-                      (height, index) => (
-                        <div
-                          key={index}
-                          className={`w-1 rounded-full bg-gradient-to-t ${positive
-                              ? "from-emerald-500 to-cyan-400"
-                              : "from-red-500 to-pink-400"
-                            }`}
-                          style={{ height }}
-                        />
-                      )
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              <TableBody>
+                {data?.map((asset) => {
+                  const positive =
+                    asset.price_change_percentage_24h >=
+                    0;
+
+                  return (
+                    <TableRow
+                      key={asset.id}
+                      className="border-border/50"
+                    >
+                      {/* Asset */}
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-10 w-10 rounded-xl border border-border/50">
+                            <AvatarImage
+                              src={asset.image}
+                              alt={asset.name}
+                            />
+
+                            <AvatarFallback>
+                              {asset.symbol
+                                .slice(0, 2)
+                                .toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+
+                          <div>
+                            <p className="font-medium">
+                              {asset.name}
+                            </p>
+
+                            <p className="text-xs uppercase text-muted-foreground">
+                              {asset.symbol}
+                            </p>
+                          </div>
+                        </div>
+                      </TableCell>
+
+                      {/* Price */}
+                      <TableCell className="font-medium">
+                        {formatCurrency(
+                          asset.current_price
+                        )}
+                      </TableCell>
+
+                      {/* Change */}
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className={
+                            positive
+                              ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                              : "border-red-500/20 bg-red-500/10 text-red-400"
+                          }
+                        >
+                          {positive ? "+" : ""}
+                          {asset.price_change_percentage_24h.toFixed(
+                            2
+                          )}
+                          %
+                        </Badge>
+                      </TableCell>
+
+                      {/* Market Cap */}
+                      <TableCell className="font-medium">
+                        {formatMarketCap(
+                          asset.market_cap
+                        )}
+                      </TableCell>
+
+                      {/* Trend */}
+                      <TableCell>
+                        <div className="flex items-center justify-end">
+                          <div className="flex items-end gap-1">
+                            {[
+                              18, 24, 16, 30, 22, 34,
+                              26, 40,
+                            ].map(
+                              (height, index) => (
+                                <div
+                                  key={index}
+                                  className={`w-1 rounded-full bg-gradient-to-t ${
+                                    positive
+                                      ? "from-emerald-500 to-cyan-400"
+                                      : "from-red-500 to-pink-400"
+                                  }`}
+                                  style={{
+                                    height,
+                                  }}
+                                />
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
