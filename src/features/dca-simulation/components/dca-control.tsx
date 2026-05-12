@@ -71,7 +71,7 @@ export function DCAControls() {
             <Label>Coin</Label>
 
             <Select defaultValue="bitcoin">
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select coin" />
               </SelectTrigger>
 
@@ -100,7 +100,7 @@ export function DCAControls() {
             <Label>DCA Frequency</Label>
 
             <Select defaultValue="weekly">
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select frequency" />
               </SelectTrigger>
 
