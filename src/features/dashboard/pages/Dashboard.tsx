@@ -1,5 +1,3 @@
-import React from "react";
-
 import DashboardHeader from "../components/DashboardHeader";
 import DashboardStatsGrid from "../components/DashboardStatsGrid";
 
@@ -11,20 +9,50 @@ import { RecentActivity } from "../components/RecentActivity";
 
 import FooterBanner from "../components/FooterBanner";
 
+import { motion } from "framer-motion";
+
+const container = {
+    hidden: {},
+    show: {
+        transition: {
+            staggerChildren: 0.08,
+        },
+    },
+};
+
+const item = {
+    hidden: { opacity: 0, y: 14 },
+    show: { opacity: 1, y: 0 },
+};
+
 export default function Dashboard() {
     return (
-        <React.Fragment>
-            <DashboardHeader />
+        <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="space-y-5"
+        >
+            <motion.div variants={item}>
+                <DashboardHeader />
+            </motion.div>
 
-            <DashboardStatsGrid />
+            <motion.div variants={item}>
+                <DashboardStatsGrid />
+            </motion.div>
 
-            {/* Main Analytics */} 
-            <MarketOverview />
-            
-            <PortfolioPerformance />
+            <motion.div variants={item}>
+                <MarketOverview />
+            </motion.div>
 
-            {/* Holdings + Activity */}
-            <div className="mt-5 grid gap-5 xl:grid-cols-[2fr_1fr]">
+            <motion.div variants={item}>
+                <PortfolioPerformance />
+            </motion.div>
+
+            <motion.div
+                variants={item}
+                className="mt-5 grid gap-5 xl:grid-cols-[2fr_1fr]"
+            >
                 <div className="min-w-0">
                     <MarketExposure />
                 </div>
@@ -32,10 +60,11 @@ export default function Dashboard() {
                 <div className="min-w-0">
                     <RecentActivity />
                 </div>
-            </div>
+            </motion.div>
 
-            {/* AI Insight */}
-            <FooterBanner />
-        </React.Fragment>
+            <motion.div variants={item}>
+                <FooterBanner />
+            </motion.div>
+        </motion.div>
     );
 }

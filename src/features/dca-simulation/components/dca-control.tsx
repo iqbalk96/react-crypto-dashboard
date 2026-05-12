@@ -40,6 +40,9 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import { motion } from "framer-motion";
+const MotionButton = motion.create(Button);
+
 export function DCAControls() {
   const [startDate, setStartDate] =
     useState<Date>();
@@ -145,7 +148,7 @@ export function DCAControls() {
                   className={cn(
                     "w-full justify-start text-left font-normal",
                     !startDate &&
-                      "text-muted-foreground"
+                    "text-muted-foreground"
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
@@ -171,11 +174,20 @@ export function DCAControls() {
 
           {/* Run Button */}
           <div className="flex items-end">
-            <Button className="w-full gap-2">
+            <MotionButton
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 17,
+              }}
+              className="w-full gap-2"
+            >
               <Play className="h-4 w-4" />
 
               Run Simulation
-            </Button>
+            </MotionButton>
           </div>
         </div>
 
@@ -207,7 +219,7 @@ export function DCAControls() {
                       className={cn(
                         "w-full justify-start text-left font-normal",
                         !endDate &&
-                          "text-muted-foreground"
+                        "text-muted-foreground"
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
