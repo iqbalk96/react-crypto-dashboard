@@ -1,0 +1,1 @@
+// Untuk mapping raw API response.

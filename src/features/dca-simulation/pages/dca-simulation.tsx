@@ -1,12 +1,24 @@
 import { motion } from "framer-motion";
 import { DCAHeader } from "../components/dca-header";
-import { DCAControls } from "../components/dca-control";
-import { DCASummaryCards } from "../components/dca-summary-card";
 import { DCAPortfolioGrowthChart } from "../components/dca-portfolio-growth";
 import { DCAPriceChart } from "../components/dca-price-chart";
 import { DCAAnalytics } from "../components/dca-analytics";
 import { DCAHistoryTable } from "../components/dca-history";
+import { DCAControls } from "../components/dca-controls";
+import { DcaSummaryCards } from "../components/dca-summary-cards";
 
+import { useState } from "react";
+
+// types
+import { DCAConfig } from "../types/domain.types";
+import { DCASummary } from "../types/dca-summary.types";
+
+// custom hooks
+import { useHistoricalData } from "../hooks/use-historical-data";
+import { calculateDaysBetween } from "../utils/calculate-days";
+import { runDCASimulation } from "../services/dca-simulation.service";
+
+// framer motion
 const container = {
   hidden: {},
   show: {
@@ -20,8 +32,34 @@ const item = {
   hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0 },
 };
+// end framer motion
 
 export default function DcaSimulationPage() {
+
+  const [config, setConfig] = useState<DCAConfig | null>(null);
+
+  const days = config
+    ? calculateDaysBetween(
+      config.startDate,
+      config.endDate
+    )
+    : 0;
+
+  const {
+    data: historicalData,
+    isLoading,
+    isError,
+    error,
+  } = useHistoricalData(
+    config?.assetId ?? "",
+    days
+  );
+
+  const summary: DCASummary | null =
+    config && historicalData
+      ? runDCASimulation(config, historicalData)
+      : null;
+
   return (
     <motion.div
       variants={container}
@@ -34,11 +72,35 @@ export default function DcaSimulationPage() {
       </motion.div>
 
       <motion.div variants={item}>
-        <DCAControls />
+        <DCAControls
+          onSubmit={setConfig}
+        />
       </motion.div>
 
       <motion.div variants={item}>
-        <DCASummaryCards />
+        {/* TODO: refactor using skeleton loading */}
+        {isLoading && (
+          <p className="text-sm text-muted-foreground">
+            Loading historical data...
+          </p>
+        )}
+
+        {/* TODO: refactpr with global error */}
+        {isError && (
+          <p className="text-sm text-red-500">
+            {
+              error instanceof Error
+                ? error.message
+                : "Failed to fetch historical data"
+            }
+          </p>
+        )}
+
+        {summary && (
+          <DcaSummaryCards
+            summary={summary}
+          />
+        )}
       </motion.div>
 
       <motion.div
