@@ -13,11 +13,17 @@ export const useHistoricalData = (
       assetId,
       days,
     ],
+
     queryFn: () =>
       fetchHistoricalPrices(
         assetId,
         days
       ),
-    enabled: !!assetId,
+
+    enabled:
+      !!assetId && days > 0,
+
+    staleTime:
+      1000 * 60 * 5,
   });
 };

@@ -9,7 +9,12 @@ import { DcaSummaryCards } from "../components/dca-summary-cards";
 
 import { useState } from "react";
 import { DCAConfig } from "../types/domain.types";
-import { DCASummary } from "../types/dca-summary.types";
+// import { DCASummary } from "../types/dca-summary.types";
+
+// custom hooks
+import { useHistoricalData } from "../hooks/use-historical-data";
+import { calculateDaysBetween } from "../utils/calculate-days";
+import { runDCASimulation } from "../services/dca-simulation.service";
 
 const container = {
   hidden: {},
@@ -25,49 +30,35 @@ const item = {
   show: { opacity: 1, y: 0 },
 };
 
-
-const generateMockSummary = (
-  config: DCAConfig
-): DCASummary => {
-  const totalPurchases = 24;
-
-  const totalInvested =
-    totalPurchases *
-    config.investmentAmount;
-
-  const currentValue =
-    totalInvested * 1.53;
-
-  const totalReturn =
-    currentValue -
-    totalInvested;
-
-  return {
-    totalInvested,
-
-    currentValue,
-
-    totalReturn,
-
-    totalReturnPercentage: 53.5,
-
-    totalUnitsAccumulated: 0.2142,
-
-    averageBuyPrice: 42180,
-
-    totalPurchases,
-
-    averageBuyVsCurrent: -12.4,
-  };
-};
-
-
 export default function DcaSimulationPage() {
-  
+
   const [config, setConfig] = useState<DCAConfig | null>(null);
-  const summary = config
-    ? generateMockSummary(config)
-    : null;
+
+  const days = config
+    ? calculateDaysBetween(
+      config.startDate,
+      config.endDate
+    )
+    : 0;
+
+  const {
+    data: historicalData,
+    isLoading,
+    isError,
+    error,
+  } = useHistoricalData(
+    config?.assetId ?? "",
+    days
+  );
+
+  const summary =
+    config && historicalData
+      ? runDCASimulation(
+        config,
+        historicalData
+      )
+      : null;
+
   return (
     <motion.div
       variants={container}
@@ -86,6 +77,22 @@ export default function DcaSimulationPage() {
       </motion.div>
 
       <motion.div variants={item}>
+        {isLoading && (
+          <p className="text-sm text-muted-foreground">
+            Loading historical data...
+          </p>
+        )}
+
+        {isError && (
+          <p className="text-sm text-red-500">
+            {
+              error instanceof Error
+                ? error.message
+                : "Failed to fetch historical data"
+            }
+          </p>
+        )}
+
         {summary && (
           <DcaSummaryCards
             summary={summary}

@@ -63,8 +63,8 @@ export function DCAControls({
 
             defaultValues: {
                 assetId: "bitcoin",
-                startDate: "2020-01-01",
-                endDate: "2023-12-31",
+                startDate: "",
+                endDate: "",
                 interval: "30",
                 investmentAmount: 100,
             },
