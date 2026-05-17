@@ -78,13 +78,13 @@ UI → Hook → TanStack Query → Service → HTTP Client → API → Cache →
 ---
 
 ## 📦 Example Feature
-
+```txt
 features/dashboard/
 ├── hooks/use-global-market.ts
 ├── services/global-market.service.ts
 ├── components/stats-card.tsx
 ├── pages/dashboard-page.tsx
-
+```
 ---
 
 ## 📊 Data Strategy
