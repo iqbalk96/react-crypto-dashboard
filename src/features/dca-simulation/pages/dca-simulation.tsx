@@ -8,14 +8,17 @@ import { DCAControls } from "../components/dca-controls";
 import { DcaSummaryCards } from "../components/dca-summary-cards";
 
 import { useState } from "react";
+
+// types
 import { DCAConfig } from "../types/domain.types";
-// import { DCASummary } from "../types/dca-summary.types";
+import { DCASummary } from "../types/dca-summary.types";
 
 // custom hooks
 import { useHistoricalData } from "../hooks/use-historical-data";
 import { calculateDaysBetween } from "../utils/calculate-days";
 import { runDCASimulation } from "../services/dca-simulation.service";
 
+// framer motion
 const container = {
   hidden: {},
   show: {
@@ -29,6 +32,7 @@ const item = {
   hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0 },
 };
+// end framer motion
 
 export default function DcaSimulationPage() {
 
@@ -51,12 +55,9 @@ export default function DcaSimulationPage() {
     days
   );
 
-  const summary =
+  const summary: DCASummary | null =
     config && historicalData
-      ? runDCASimulation(
-        config,
-        historicalData
-      )
+      ? runDCASimulation(config, historicalData)
       : null;
 
   return (
@@ -77,12 +78,14 @@ export default function DcaSimulationPage() {
       </motion.div>
 
       <motion.div variants={item}>
+        {/* TODO: refactor using skeleton loading */}
         {isLoading && (
           <p className="text-sm text-muted-foreground">
             Loading historical data...
           </p>
         )}
 
+        {/* TODO: refactpr with global error */}
         {isError && (
           <p className="text-sm text-red-500">
             {

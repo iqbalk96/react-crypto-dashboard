@@ -6,7 +6,7 @@ export const dcaControlsSchema = z
     startDate: z.string().min(1),
     endDate: z.string().min(1),
     interval: z.enum(["1", "7", "30"]),
-    investmentAmount: z.number().positive(),
+    investmentAmount: z.coerce.number().positive(),
   })
   .superRefine((data, ctx) => {
     const start = new Date(data.startDate);

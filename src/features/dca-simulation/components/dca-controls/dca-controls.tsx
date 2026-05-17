@@ -58,15 +58,16 @@ export function DCAControls({
 }: DCAControlsProps) {
     const form =
         useForm<DCAControlsFormValues>({
-            resolver:
-                zodResolver(dcaControlsSchema),
+            resolver: zodResolver(
+                dcaControlsSchema
+            ) as any,
 
             defaultValues: {
                 assetId: "bitcoin",
                 startDate: "",
                 endDate: "",
                 interval: "30",
-                investmentAmount: 100,
+                investmentAmount: 0,
             },
         });
 
