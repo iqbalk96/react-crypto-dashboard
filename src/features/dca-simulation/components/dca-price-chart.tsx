@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  ReferenceDot,
 } from "recharts";
 
 import {
@@ -19,54 +18,32 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 
-const chartData = [
-  {
-    date: "Jan",
-    btcPrice: 42000,
-    dcaBuy: 42000,
-  },
-  {
-    date: "Feb",
-    btcPrice: 39000,
-    dcaBuy: null,
-  },
-  {
-    date: "Mar",
-    btcPrice: 45000,
-    dcaBuy: 45000,
-  },
-  {
-    date: "Apr",
-    btcPrice: 51000,
-    dcaBuy: null,
-  },
-  {
-    date: "May",
-    btcPrice: 62000,
-    dcaBuy: 62000,
-  },
-  {
-    date: "Jun",
-    btcPrice: 70000,
-    dcaBuy: null,
-  },
-  {
-    date: "Jul",
-    btcPrice: 65500,
-    dcaBuy: 65500,
-  },
-];
+import type { DCATimelinePoint } from "../types/domain.types";
+import { formatCompactUsd, formatUsd } from "../utils/format";
 
-export function DCAPriceChart() {
+interface Props {
+  timeline: DCATimelinePoint[];
+  symbol: string;
+  name: string;
+}
+
+export function DCAPriceChart({ timeline, symbol, name }: Props) {
+  // buyPrice hanya terisi pada titik pembelian, selain itu null (tidak digambar)
+  const chartData = timeline.map((point) => ({
+    date: point.date,
+    price: point.price,
+    buyPrice: point.bought ? point.price : null,
+  }));
+
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader className="space-y-1">
         <CardTitle>
-          BTC Price with DCA Purchases
+          {symbol} Price with DCA Purchases
         </CardTitle>
 
         <CardDescription>
-          Visualize Bitcoin price movement
+          Visualize {name} price movement
           alongside your DCA entry points.
         </CardDescription>
       </CardHeader>
@@ -89,6 +66,7 @@ export function DCAPriceChart() {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={10}
+                minTickGap={40}
                 tick={{
                   fill: "#71717a",
                   fontSize: 12,
@@ -99,9 +77,8 @@ export function DCAPriceChart() {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={10}
-                tickFormatter={(value) =>
-                  `$${value / 1000}k`
-                }
+                domain={["auto", "auto"]}
+                tickFormatter={formatCompactUsd}
                 tick={{
                   fill: "#71717a",
                   fontSize: 12,
@@ -109,6 +86,10 @@ export function DCAPriceChart() {
               />
 
               <Tooltip
+                formatter={(value, key) => [
+                  formatUsd(Number(value)),
+                  key === "buyPrice" ? "DCA Purchase" : `${symbol} Price`,
+                ]}
                 cursor={{
                   stroke: "#8b5cf6",
                   strokeOpacity: 0.2,
@@ -124,33 +105,33 @@ export function DCAPriceChart() {
                 }}
               />
 
-              {/* BTC Price Line */}
+              {/* Price Line */}
               <Line
                 type="monotone"
-                dataKey="btcPrice"
+                dataKey="price"
                 stroke="#eab308"
                 strokeWidth={3}
                 dot={false}
                 activeDot={{
                   r: 6,
                 }}
-                name="BTC Price"
+                name={`${symbol} Price`}
               />
 
               {/* DCA Buy Points */}
-              {chartData.map((item, index) =>
-                item.dcaBuy ? (
-                  <ReferenceDot
-                    key={index}
-                    x={item.date}
-                    y={item.dcaBuy}
-                    r={5}
-                    fill="#22c55e"
-                    stroke="#09090b"
-                    strokeWidth={2}
-                  />
-                ) : null
-              )}
+              <Line
+                dataKey="buyPrice"
+                stroke="none"
+                dot={{
+                  r: 4,
+                  fill: "#22c55e",
+                  stroke: "#09090b",
+                  strokeWidth: 2,
+                }}
+                activeDot={false}
+                isAnimationActive={false}
+                name="DCA Purchase"
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -161,7 +142,7 @@ export function DCAPriceChart() {
             <div className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
 
             <span className="text-sm text-muted-foreground">
-              BTC Price
+              {symbol} Price
             </span>
           </div>
 

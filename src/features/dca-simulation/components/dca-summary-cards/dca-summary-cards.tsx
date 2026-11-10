@@ -19,10 +19,12 @@ import { DCASummary }
 
 interface Props {
   summary: DCASummary;
+  symbol: string;
 }
 
 const summaryData = (
-  summary: DCASummary
+  summary: DCASummary,
+  symbol: string
 ) => [
   {
     title: "Total Invested",
@@ -42,7 +44,7 @@ const summaryData = (
   {
     title: "Profit / Loss",
     value: `$${summary.totalReturn.toFixed(2)}`,
-    change: `${summary.totalUnitsAccumulated.toFixed(4)} BTC`,
+    change: `${summary.totalUnitsAccumulated.toFixed(4)} ${symbol}`,
     positive:
       summary.totalReturn >= 0,
     icon: TrendingUp,
@@ -59,10 +61,11 @@ const summaryData = (
 
 export function DcaSummaryCards({
   summary,
+  symbol,
 }: Props) {
   return (
     <div className="grid gap-4 mt-5 sm:grid-cols-2 xl:grid-cols-4">
-      {summaryData(summary).map(
+      {summaryData(summary, symbol).map(
         (item, index) => {
           const Icon = item.icon;
 

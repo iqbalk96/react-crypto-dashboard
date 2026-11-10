@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 import { CalendarIcon } from "lucide-react";
 
@@ -45,6 +45,7 @@ import { Calendar } from "@/shared/components/ui/calendar";
 
 import {
     dcaControlsSchema,
+    type DCAControlsFormInput,
     type DCAControlsFormValues,
 } from "./dca-controls.schema";
 
@@ -57,17 +58,21 @@ export function DCAControls({
     onSubmit,
 }: DCAControlsProps) {
     const form =
-        useForm<DCAControlsFormValues>({
+        useForm<
+            DCAControlsFormInput,
+            unknown,
+            DCAControlsFormValues
+        >({
             resolver: zodResolver(
                 dcaControlsSchema
-            ) as any,
+            ),
 
             defaultValues: {
                 assetId: "bitcoin",
                 startDate: "",
                 endDate: "",
                 interval: "30",
-                investmentAmount: 0,
+                investmentAmount: "",
             },
         });
 
@@ -180,6 +185,7 @@ export function DCAControls({
                                                 placeholder="100"
                                                 className="h-11"
                                                 {...field}
+                                                value={String(field.value ?? "")}
                                             />
                                         </FormControl>
 
@@ -216,9 +222,7 @@ export function DCAControls({
 
                                                         {field.value ? (
                                                             format(
-                                                                new Date(
-                                                                    field.value
-                                                                ),
+                                                                parseISO(field.value),
                                                                 "PPP"
                                                             )
                                                         ) : (
@@ -238,7 +242,7 @@ export function DCAControls({
                                                     mode="single"
                                                     selected={
                                                         field.value
-                                                            ? new Date(field.value)
+                                                            ? parseISO(field.value)
                                                             : undefined
                                                     }
                                                     onSelect={(date) => {
@@ -283,9 +287,7 @@ export function DCAControls({
 
                                                         {field.value ? (
                                                             format(
-                                                                new Date(
-                                                                    field.value
-                                                                ),
+                                                                parseISO(field.value),
                                                                 "PPP"
                                                             )
                                                         ) : (
@@ -305,7 +307,7 @@ export function DCAControls({
                                                     mode="single"
                                                     selected={
                                                         field.value
-                                                            ? new Date(field.value)
+                                                            ? parseISO(field.value)
                                                             : undefined
                                                     }
                                                     onSelect={(date) => {

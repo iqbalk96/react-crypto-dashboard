@@ -19,45 +19,14 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 
-const chartData = [
-  {
-    date: "Jan",
-    invested: 1000,
-    portfolioValue: 1200,
-  },
-  {
-    date: "Feb",
-    invested: 2000,
-    portfolioValue: 2500,
-  },
-  {
-    date: "Mar",
-    invested: 3000,
-    portfolioValue: 4200,
-  },
-  {
-    date: "Apr",
-    invested: 4000,
-    portfolioValue: 5100,
-  },
-  {
-    date: "May",
-    invested: 5000,
-    portfolioValue: 6900,
-  },
-  {
-    date: "Jun",
-    invested: 6000,
-    portfolioValue: 8420,
-  },
-  {
-    date: "Jul",
-    invested: 7000,
-    portfolioValue: 9800,
-  },
-];
+import type { DCATimelinePoint } from "../types/domain.types";
+import { formatCompactUsd, formatUsd } from "../utils/format";
 
-export function DCAPortfolioGrowthChart() {
+interface Props {
+  timeline: DCATimelinePoint[];
+}
+
+export function DCAPortfolioGrowthChart({ timeline }: Props) {
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader className="space-y-1">
@@ -77,7 +46,7 @@ export function DCAPortfolioGrowthChart() {
             width="100%"
             height="100%"
           >
-            <LineChart data={chartData}>
+            <LineChart data={timeline}>
               <CartesianGrid
                 strokeDasharray="3 3"
                 vertical={false}
@@ -89,6 +58,7 @@ export function DCAPortfolioGrowthChart() {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={10}
+                minTickGap={40}
                 className="text-xs"
               />
 
@@ -96,13 +66,12 @@ export function DCAPortfolioGrowthChart() {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={10}
-                tickFormatter={(value) =>
-                  `$${value / 1000}k`
-                }
+                tickFormatter={formatCompactUsd}
                 className="text-xs"
               />
 
               <Tooltip
+                formatter={(value) => formatUsd(Number(value))}
                 cursor={{
                   stroke: "hsl(var(--primary))",
                   strokeOpacity: 0.2,
@@ -121,7 +90,7 @@ export function DCAPortfolioGrowthChart() {
               {/* Total Invested */}
               <Line
                 type="monotone"
-                dataKey="invested"
+                dataKey="totalInvested"
                 stroke="#71717a"
                 strokeWidth={2}
                 dot={false}

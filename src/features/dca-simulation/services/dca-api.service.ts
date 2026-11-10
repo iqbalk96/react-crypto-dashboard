@@ -33,10 +33,22 @@ export const fetchHistoricalPrices = async (
       }
     );
 
-  return response.data.prices.map(
-    ([timestamp, price]) => ({
-      timestamp,
-      price,
-    })
-  );
+  // Satu titik per hari (UTC). Dengan interval=daily CoinGecko bisa menambah
+  // titik "live" di akhir (hari ini) selain titik 00:00 UTC, sehingga terjadi
+  // pembelian ekstra dan harga akhir tidak konsisten. Simpan titik pertama
+  // tiap hari saja dan buang yang melewati batas `to`.
+  const seenDays = new Set<string>();
+  const points: HistoricalPricePoint[] = [];
+
+  for (const [timestamp, price] of response.data.prices) {
+    if (timestamp > to * 1000) continue;
+
+    const day = new Date(timestamp).toISOString().slice(0, 10);
+    if (seenDays.has(day)) continue;
+
+    seenDays.add(day);
+    points.push({ timestamp, price });
+  }
+
+  return points;
 };

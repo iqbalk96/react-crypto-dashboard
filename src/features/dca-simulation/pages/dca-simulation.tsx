@@ -11,11 +11,11 @@ import { useState } from "react";
 
 // types
 import { DCAConfig } from "../types/domain.types";
-import { DCASummary } from "../types/dca-summary.types";
+
+import { getErrorMessage } from "../utils/get-error-message";
 
 // custom hooks
-import { useHistoricalData } from "../hooks/use-historical-data";
-import { runDCASimulation } from "../services/dca-simulation.service";
+import { useDCASimulation } from "../hooks/use-dca-simulation";
 
 // framer motion
 const container = {
@@ -37,21 +37,8 @@ export default function DcaSimulationPage() {
 
   const [config, setConfig] = useState<DCAConfig | null>(null);
 
-  const {
-    data: historicalData,
-    isLoading,
-    isError,
-    error,
-  } = useHistoricalData(
-    config?.assetId ?? "",
-    config?.startDate ?? "",
-    config?.endDate ?? ""
-  );
-
-  const summary: DCASummary | null =
-    config && historicalData
-      ? runDCASimulation(config, historicalData)
-      : null;
+  const { result, asset, isLoading, isError, error } =
+    useDCASimulation(config);
 
   return (
     <motion.div
@@ -81,41 +68,49 @@ export default function DcaSimulationPage() {
         {/* TODO: refactpr with global error */}
         {isError && (
           <p className="text-sm text-red-500">
-            {
-              error instanceof Error
-                ? error.message
-                : "Failed to fetch historical data"
-            }
+            {getErrorMessage(error)}
           </p>
         )}
 
-        {summary && (
+        {result && (
           <DcaSummaryCards
-            summary={summary}
+            summary={result.summary}
+            symbol={asset.symbol}
           />
         )}
       </motion.div>
 
-      <motion.div
-        variants={item}
-        className="grid grid-cols-1 gap-5 xl:grid-cols-2 mt-5"
-      >
-        <DCAPortfolioGrowthChart />
-        <DCAPriceChart />
-      </motion.div>
+      {result && (
+        <>
+          <motion.div
+            variants={item}
+            className="grid grid-cols-1 gap-5 xl:grid-cols-2 mt-5"
+          >
+            <DCAPortfolioGrowthChart timeline={result.timeline} />
+            <DCAPriceChart
+              timeline={result.timeline}
+              symbol={asset.symbol}
+              name={asset.name}
+            />
+          </motion.div>
 
-      <motion.div
-        variants={item}
-        className="grid grid-cols-1 gap-5 xl:grid-cols-3 mt-5"
-      >
-        <div className="xl:col-span-1">
-          <DCAAnalytics />
-        </div>
+          <motion.div
+            variants={item}
+            className="grid grid-cols-1 gap-5 xl:grid-cols-3 mt-5"
+          >
+            <div className="xl:col-span-1">
+              <DCAAnalytics result={result} symbol={asset.symbol} />
+            </div>
 
-        <div className="xl:col-span-2">
-          <DCAHistoryTable />
-        </div>
-      </motion.div>
+            <div className="xl:col-span-2">
+              <DCAHistoryTable
+                timeline={result.timeline}
+                symbol={asset.symbol}
+              />
+            </div>
+          </motion.div>
+        </>
+      )}
     </motion.div>
   );
 }

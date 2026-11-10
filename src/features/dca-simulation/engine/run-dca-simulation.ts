@@ -1,19 +1,30 @@
-import { DCAConfig, DCAInvestmentEvent } from "../types/domain.types";
-import { DCASummary } from "../types/dca-summary.types";
+import {
+  DCAConfig,
+  DCAInvestmentEvent,
+  DCASimulationResult,
+} from "../types/domain.types";
 import { HistoricalPricePoint } from "../types/historical-price.types";
 
 import { generateInvestmentSchedule } from "./generate-investment-schedule";
 import { findNearestPrice } from "./find-nearest-price";
 import { calculateInvestmentEvent } from "./calculate-investment-event";
 import { buildSimulationSummary } from "./build-simulation-summary";
+import { buildSimulationTimeline } from "./build-simulation-timeline";
 
 export const runDCASimulation = (
   config: DCAConfig,
   historicalData: HistoricalPricePoint[],
-): DCASummary => {
+): DCASimulationResult => {
   const sorted = [...historicalData].sort((a, b) => a.timestamp - b.timestamp);
 
-  if (sorted.length === 0) return buildSimulationSummary([], 0);
+  if (sorted.length === 0) {
+    return {
+      summary: buildSimulationSummary([], 0),
+      events: [],
+      timeline: [],
+      latestPrice: 0,
+    };
+  }
 
   const schedule = generateInvestmentSchedule(
     sorted[0].timestamp,
@@ -34,5 +45,10 @@ export const runDCASimulation = (
 
   const latestPrice = sorted[sorted.length - 1].price;
 
-  return buildSimulationSummary(events, latestPrice);
+  return {
+    summary: buildSimulationSummary(events, latestPrice),
+    events,
+    timeline: buildSimulationTimeline(sorted, events),
+    latestPrice,
+  };
 };

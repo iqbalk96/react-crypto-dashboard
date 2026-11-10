@@ -15,46 +15,66 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 
-const analyticsData = [
-  {
-    label: "Average Buy Price",
-    value: "$42,376",
-    icon: BadgeDollarSign,
-    positive: true,
-  },
-  {
-    label: "Current BTC Price",
-    value: "$65,049",
-    icon: Coins,
-    positive: true,
-  },
-  {
-    label: "Total BTC Accumulated",
-    value: "0.283152 BTC",
-    icon: Activity,
-    positive: true,
-  },
-  {
-    label: "Total Purchases",
-    value: "120",
-    icon: CalendarClock,
-    positive: true,
-  },
-  {
-    label: "Best 1Y Return",
-    value: "+127.35%",
-    icon: TrendingUp,
-    positive: true,
-  },
-  {
-    label: "Worst Drawdown",
-    value: "-32.45%",
-    icon: TrendingDown,
-    positive: false,
-  },
-];
+import type { DCASimulationResult } from "../types/domain.types";
+import { formatPercent, formatUnits, formatUsd } from "../utils/format";
 
-export function DCAAnalytics() {
+interface Props {
+  result: DCASimulationResult;
+  symbol: string;
+}
+
+export function DCAAnalytics({ result, symbol }: Props) {
+  const { summary, timeline, latestPrice } = result;
+
+  // Return (%) terhadap total investasi pada tiap titik setelah pembelian pertama
+  const returns = timeline
+    .filter((p) => p.totalInvested > 0)
+    .map(
+      (p) => ((p.portfolioValue - p.totalInvested) / p.totalInvested) * 100,
+    );
+
+  const bestReturn = returns.length ? Math.max(...returns) : 0;
+  const worstReturn = returns.length ? Math.min(...returns) : 0;
+
+  const analyticsData = [
+    {
+      label: "Average Buy Price",
+      value: formatUsd(summary.averageBuyPrice),
+      icon: BadgeDollarSign,
+      positive: true,
+    },
+    {
+      label: `Current ${symbol} Price`,
+      value: formatUsd(latestPrice),
+      icon: Coins,
+      positive: true,
+    },
+    {
+      label: `Total ${symbol} Accumulated`,
+      value: `${formatUnits(summary.totalUnitsAccumulated)} ${symbol}`,
+      icon: Activity,
+      positive: true,
+    },
+    {
+      label: "Total Purchases",
+      value: String(summary.totalPurchases),
+      icon: CalendarClock,
+      positive: true,
+    },
+    {
+      label: "Best Return",
+      value: formatPercent(bestReturn),
+      icon: TrendingUp,
+      positive: bestReturn >= 0,
+    },
+    {
+      label: "Worst Return",
+      value: formatPercent(worstReturn),
+      icon: TrendingDown,
+      positive: worstReturn >= 0,
+    },
+  ];
+
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader className="space-y-1">

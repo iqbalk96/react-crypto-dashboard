@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Card,
   CardContent,
@@ -27,55 +29,21 @@ import { Badge } from "@/shared/components/ui/badge";
 
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 
-const purchaseHistory = [
-  {
-    date: "2025-05-18",
-    btcPrice: "$65,049",
-    invested: "$100",
-    btcBought: "0.001537",
-    totalBTC: "0.283152",
-    portfolioValue: "$18,420",
-    status: "Profit",
-  },
-  {
-    date: "2025-05-11",
-    btcPrice: "$61,302",
-    invested: "$100",
-    btcBought: "0.001632",
-    totalBTC: "0.281615",
-    portfolioValue: "$18,320",
-    status: "Profit",
-  },
-  {
-    date: "2025-05-04",
-    btcPrice: "$59,127",
-    invested: "$100",
-    btcBought: "0.001691",
-    totalBTC: "0.279983",
-    portfolioValue: "$18,214",
-    status: "Profit",
-  },
-  {
-    date: "2025-04-27",
-    btcPrice: "$63,556",
-    invested: "$100",
-    btcBought: "0.001573",
-    totalBTC: "0.278292",
-    portfolioValue: "$18,104",
-    status: "Profit",
-  },
-  {
-    date: "2025-04-20",
-    btcPrice: "$64,821",
-    invested: "$100",
-    btcBought: "0.001542",
-    totalBTC: "0.276719",
-    portfolioValue: "$17,999",
-    status: "Loss",
-  },
-];
+import type { DCATimelinePoint } from "../types/domain.types";
+import { formatUnits, formatUsd } from "../utils/format";
 
-export function DCAHistoryTable() {
+interface Props {
+  timeline: DCATimelinePoint[];
+  symbol: string;
+}
+
+export function DCAHistoryTable({ timeline, symbol }: Props) {
+  const [rows, setRows] = useState("10");
+
+  // Hanya titik pembelian, terbaru di atas
+  const purchases = timeline.filter((p) => p.bought).reverse();
+  const visible = purchases.slice(0, Number(rows));
+
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -91,7 +59,7 @@ export function DCAHistoryTable() {
         </div>
 
         <div className="w-[120px]">
-          <Select defaultValue="10">
+          <Select value={rows} onValueChange={setRows}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -124,7 +92,7 @@ export function DCAHistoryTable() {
                   </TableHead>
 
                   <TableHead>
-                    BTC Price
+                    {symbol} Price
                   </TableHead>
 
                   <TableHead>
@@ -132,11 +100,11 @@ export function DCAHistoryTable() {
                   </TableHead>
 
                   <TableHead>
-                    BTC Bought
+                    {symbol} Bought
                   </TableHead>
 
                   <TableHead>
-                    Total BTC
+                    Total {symbol}
                   </TableHead>
 
                   <TableHead>
@@ -150,10 +118,13 @@ export function DCAHistoryTable() {
               </TableHeader>
 
               <TableBody>
-                {purchaseHistory.map(
-                  (item, index) => (
+                {visible.map((item) => {
+                  const profit =
+                    item.portfolioValue >= item.totalInvested;
+
+                  return (
                     <TableRow
-                      key={index}
+                      key={item.timestamp}
                       className="border-border/50"
                     >
                       <TableCell className="font-medium">
@@ -161,43 +132,40 @@ export function DCAHistoryTable() {
                       </TableCell>
 
                       <TableCell>
-                        {item.btcPrice}
+                        {formatUsd(item.price)}
                       </TableCell>
 
                       <TableCell>
-                        {item.invested}
+                        {formatUsd(item.amountInvested)}
                       </TableCell>
 
                       <TableCell>
-                        {item.btcBought}
+                        {formatUnits(item.unitsBought)}
                       </TableCell>
 
                       <TableCell>
-                        {item.totalBTC}
+                        {formatUnits(item.totalUnits)}
                       </TableCell>
 
                       <TableCell className="font-semibold">
-                        {
-                          item.portfolioValue
-                        }
+                        {formatUsd(item.portfolioValue)}
                       </TableCell>
 
                       <TableCell>
                         <Badge
                           variant="secondary"
                           className={
-                            item.status ===
-                            "Profit"
+                            profit
                               ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-500"
                               : "border-red-500/20 bg-red-500/10 text-red-500"
                           }
                         >
-                          {item.status}
+                          {profit ? "Profit" : "Loss"}
                         </Badge>
                       </TableCell>
                     </TableRow>
-                  )
-                )}
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
@@ -206,7 +174,7 @@ export function DCAHistoryTable() {
         {/* Footer */}
         <div className="mt-6 flex flex-col gap-4 border-t border-border/50 pt-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
           <p>
-            Showing 1–5 of 120 DCA
+            Showing {visible.length} of {purchases.length} DCA
             purchases
           </p>
 

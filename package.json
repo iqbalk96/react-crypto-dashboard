@@ -1,5 +1,5 @@
 {
-  "name": "react-shadcn-starter",
+  "name": "react-crypto-dashboard",
   "private": true,
   "version": "1.0",
   "type": "module",
@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview",
-    "build:gh": "tsc -b && cross-env VITE_BASE_URL=/react-shadcn-starter/ VITE_USE_HASH_ROUTE=true vite build"
+    "build:gh": "tsc -b && cross-env VITE_BASE_URL=/react-crypto-dashboard/ VITE_USE_HASH_ROUTE=true vite build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -55,6 +57,7 @@
     "globals": "^15.15.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^3.2.7"
   }
 }
