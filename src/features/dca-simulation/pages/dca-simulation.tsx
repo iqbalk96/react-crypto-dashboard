@@ -15,7 +15,6 @@ import { DCASummary } from "../types/dca-summary.types";
 
 // custom hooks
 import { useHistoricalData } from "../hooks/use-historical-data";
-import { calculateDaysBetween } from "../utils/calculate-days";
 import { runDCASimulation } from "../services/dca-simulation.service";
 
 // framer motion
@@ -38,13 +37,6 @@ export default function DcaSimulationPage() {
 
   const [config, setConfig] = useState<DCAConfig | null>(null);
 
-  const days = config
-    ? calculateDaysBetween(
-      config.startDate,
-      config.endDate
-    )
-    : 0;
-
   const {
     data: historicalData,
     isLoading,
@@ -52,7 +44,8 @@ export default function DcaSimulationPage() {
     error,
   } = useHistoricalData(
     config?.assetId ?? "",
-    days
+    config?.startDate ?? "",
+    config?.endDate ?? ""
   );
 
   const summary: DCASummary | null =

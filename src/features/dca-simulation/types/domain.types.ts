@@ -7,3 +7,10 @@ export type DCAConfig = {
   intervalDays: number;
   investmentAmount: number;
 };
+
+export type DCAInvestmentEvent = {
+  timestamp: number;
+  price: number;
+  amountInvested: number;
+  unitsBought: number;
+};

@@ -5,23 +5,26 @@ import { fetchHistoricalPrices }
 
 export const useHistoricalData = (
   assetId: string,
-  days: number
+  startDate: string,
+  endDate: string
 ) => {
   return useQuery({
     queryKey: [
       "historical-data",
       assetId,
-      days,
+      startDate,
+      endDate,
     ],
 
     queryFn: () =>
       fetchHistoricalPrices(
         assetId,
-        days
+        startDate,
+        endDate
       ),
 
     enabled:
-      !!assetId && days > 0,
+      !!assetId && !!startDate && !!endDate,
 
     staleTime:
       1000 * 60 * 5,
