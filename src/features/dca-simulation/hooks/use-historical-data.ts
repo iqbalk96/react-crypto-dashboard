@@ -1,15 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 
 import { fetchHistoricalPrices }
   from "../services/dca-api.service";
 
-export const useHistoricalData = (
+/**
+ * Opsi query dipisahkan dari hook agar dapat dipakai ulang
+ * (mis. prefetch atau pengujian tanpa React).
+ * Interval DCA sengaja tidak masuk query key: data harga sama untuk semua
+ * interval, sehingga mengganti interval cukup menghitung ulang di engine
+ * tanpa permintaan baru ke API.
+ */
+export const historicalDataQueryOptions = (
   assetId: string,
   startDate: string,
   endDate: string
-) => {
-  return useQuery({
+) =>
+  queryOptions({
     queryKey: [
       "historical-data",
       assetId,
@@ -24,9 +31,6 @@ export const useHistoricalData = (
         endDate
       ),
 
-    enabled:
-      !!assetId && !!startDate && !!endDate,
-
     staleTime:
       1000 * 60 * 5,
 
@@ -38,5 +42,21 @@ export const useHistoricalData = (
       }
       return failureCount < 2;
     },
+  });
+
+export const useHistoricalData = (
+  assetId: string,
+  startDate: string,
+  endDate: string
+) => {
+  return useQuery({
+    ...historicalDataQueryOptions(
+      assetId,
+      startDate,
+      endDate
+    ),
+
+    enabled:
+      !!assetId && !!startDate && !!endDate,
   });
 };
